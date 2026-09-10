@@ -27,6 +27,9 @@ jobs:
       - name: Baixar o repositório
         uses: actions/checkout@v4
 
+      - name: Instalar FFmpeg
+        run: sudo apt-get update && sudo apt-get install -y ffmpeg
+
       - name: Gerar vídeo com texto sobreposto
         run: |
           mkdir -p outputs
