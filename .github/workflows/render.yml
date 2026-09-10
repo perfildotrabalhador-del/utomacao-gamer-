@@ -1,0 +1,41 @@
+name: Gerar Video
+
+on:
+  workflow_dispatch:
+    inputs:
+      produto:
+        description: 'Nome do produto'
+        required: true
+      preco:
+        description: 'Preço do produto'
+        required: true
+      video_id:
+        description: 'ID único do vídeo'
+        required: true
+
+permissions:
+  contents: write
+
+jobs:
+  renderizar:
+    runs-on: ubuntu-latest
+    env:
+      PRODUTO: ${{ github.event.inputs.produto }}
+      PRECO: ${{ github.event.inputs.preco }}
+      VIDEO_ID: ${{ github.event.inputs.video_id }}
+    steps:
+      - name: Baixar o repositório
+        uses: actions/checkout@v4
+
+      - name: Gerar vídeo com texto sobreposto
+        run: |
+          mkdir -p outputs
+          ffmpeg -i fundo.mp4 -vf "drawtext=text='$PRODUTO':fontcolor=white:fontsize=54:x=(w-text_w)/2:y=100:box=1:boxcolor=black@0.6:boxborderw=15,drawtext=text='$PRECO':fontcolor=yellow:fontsize=64:x=(w-text_w)/2:y=200:box=1:boxcolor=black@0.6:boxborderw=15" -codec:a copy "outputs/$VIDEO_ID.mp4"
+
+      - name: Salvar o vídeo no repositório
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add "outputs/$VIDEO_ID.mp4"
+          git commit -m "Video gerado: $VIDEO_ID"
+          git push
