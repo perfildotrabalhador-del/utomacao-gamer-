@@ -33,7 +33,7 @@ jobs:
       - name: Gerar vídeo com texto sobreposto
         run: |
           mkdir -p outputs
-          ffmpeg -i fundo.mp4 -vf "drawtext=text='$PRODUTO':fontcolor=white:fontsize=54:x=(w-text_w)/2:y=100:box=1:boxcolor=black@0.6:boxborderw=15,drawtext=text='$PRECO':fontcolor=yellow:fontsize=64:x=(w-text_w)/2:y=200:box=1:boxcolor=black@0.6:boxborderw=15" -codec:a copy "outputs/$VIDEO_ID.mp4"
+          ffmpeg -i fundo.mp4 -vf "drawbox=x=0:y=ih-320:w=iw:h=320:color=black@0.55:t=fill,drawtext=fontfile=fonte.ttf:text='$PRODUTO':fontcolor=white:fontsize=58:x=(w-text_w)/2:y=h-280,drawtext=fontfile=fonte.ttf:text='R\\$ $PRECO':fontcolor=#39FF14:fontsize=80:x=(w-text_w)/2:y=h-180" -codec:a copy "outputs/$VIDEO_ID.mp4"
 
       - name: Salvar o vídeo no repositório
         run: |
